@@ -12,14 +12,14 @@ $(function () {
 
     //Emit message
     // If send message btn is clicked
-    send_message.click(function(){
-        socket.emit('new_message', {message : message.val()})
+    send_message.click(function () {
+        socket.emit('new_message', {message: message.val(), username: nickName.val(), userId: socket.id})
     });
     // Or if the enter key is pressed
-    message.keypress( e => {
+    message.keypress(e => {
         let keycode = (e.keyCode ? e.keyCode : e.which);
-        if(keycode == '13'){
-            socket.emit('new_message', {message : message.val()})
+        if (keycode == '13') {
+            socket.emit('new_message', {message: message.val(), username: nickName.val(), userId: socket.id})
         }
     })
 
@@ -40,13 +40,13 @@ $(function () {
     });
 
     //Emit a username
-    nickName.keypress( e => {
+    nickName.keypress(e => {
         let keycode = (e.keyCode ? e.keyCode : e.which);
-        if(keycode == '13'){
-            socket.emit('change_username', {nickName : nickName.val()});
+        if (keycode == '13') {
+            socket.emit('change_username', {nickName: nickName.val()});
             socket.on('get users', data => {
                 let html = '';
-                for(let i=0;i<data.length;i++){
+                for (let i = 0; i < data.length; i++) {
                     html += `<li class="list-item" style="color: ${data[i].color}">${data[i].username}</li>`;
                 }
                 usersList.html(html)
@@ -57,8 +57,8 @@ $(function () {
     //Emit typing
     message.on("keypress", e => {
         let keycode = (e.keyCode ? e.keyCode : e.which);
-        if(keycode != '13'){
-            socket.emit('typing')
+        if (keycode != '13') {
+            socket.emit('typing', {'userId': socket.id})
         }
     });
 
